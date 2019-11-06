@@ -21,10 +21,6 @@ class ScheduleController {
     const { date } = req.query;
     const parsedDate = parseISO(date);
 
-    // 2019-10-21 00:00:00
-
-    // 2019-10-21 23:59:59
-
     const appointments = await Appointment.findAll({
       where: {
         provider_id: req.userId,
@@ -33,6 +29,13 @@ class ScheduleController {
           [Op.between]: [startOfDay(parsedDate), endOfDay(parsedDate)],
         },
       },
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['name'],
+        },
+      ],
       order: ['date'],
     });
 
